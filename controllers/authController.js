@@ -38,7 +38,11 @@ const createSendToken = (user, statusCode, res) => {
 exports.signup = catchAsync(async (req, res) => {
   const newUser = await User.create(req.body);
   const url = `${req.protocol}://${req.get('host')}/me`;
-  await new Email(newUser, url).sendWelcome();
+  try {
+    await new Email(newUser, url).sendWelcome();
+  } catch (err) {
+    console.error('Welcome email error:', err);
+  }
   createSendToken(newUser, 201, res);
 });
 
@@ -118,23 +122,25 @@ exports.restrictTo = (...roles) => (req, res, next) => {
   }
   next();
 };
+
 exports.forgetPassword = catchAsync(async (req, res, next) => {
-  //1 get user form posted email
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
     return next(new AppError('There is no user with email address', 404));
   }
-  //2 generate random reset token
+
   const restToken = user.createPasswordRestToken();
+
   await user.save({ validateBeforeSave: false });
-  // 3 send the token to user
+
   const resetURL = `${req.protocol}://${req.get(
     'host'
   )}/resetPassword/${restToken}`;
 
   try {
     await new Email(user, resetURL).sendPasswordReset();
+
     res.status(200).json({
       status: 'success',
       message: 'Token sent to email!'
@@ -142,13 +148,13 @@ exports.forgetPassword = catchAsync(async (req, res, next) => {
   } catch (err) {
     user.PasswordRestExpires = undefined;
     user.PasswordRestToken = undefined;
+
     await user.save({ validateBeforeSave: false });
 
-    return next(
-      new AppError('There was an error sending email. Try again later!', 500)
-    );
+    return next(new AppError('Email service is currently unavailable', 503));
   }
 });
+
 exports.resetPassword = catchAsync(async (req, res, next) => {
   //1 Get user based on the token
   const hashedToken = crypto
