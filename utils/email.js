@@ -40,7 +40,7 @@ module.exports = class Email {
     // 4) Handle Resend errors
     if (error) {
       console.error('Resend error:', error);
-      throw new Error(error.message);
+      throw new Error('Email service is currently unavailable');
     }
 
     console.log('Email sent successfully:', data.id);
