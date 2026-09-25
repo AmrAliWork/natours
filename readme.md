@@ -35,4 +35,4 @@ A backend-focused web application built with **Node.js, Express.js, MongoDB, and
 
 **Amr Ali**
 
-[LinkedIn](https://www.linkedin.com/in/amr-ali-ead249)
+[LinkedIn](https://www.linkedin.com/in/amr-ali-ead2492)
