@@ -9,7 +9,6 @@ import { signup } from './signup';
 import { forgotPassword } from './forgotPassword';
 import { resetPassword } from './resetPassword';
 // DOM ELEMENTS
-console.log('MAIN JS LOADED');
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const signupForm = document.querySelector('.form--signup');
@@ -100,14 +99,8 @@ if (userPasswordForm)
 
 if (bookBtn)
   bookBtn.addEventListener('click', e => {
-    console.log('BUTTON CLICKED');
-
     e.currentTarget.textContent = 'Processing...';
-
     const { tourId } = e.currentTarget.dataset;
-
-    console.log('TOUR ID:', tourId);
-
     bookTour(tourId);
   });
 
