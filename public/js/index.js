@@ -9,6 +9,7 @@ import { signup } from './signup';
 import { forgotPassword } from './forgotPassword';
 import { resetPassword } from './resetPassword';
 // DOM ELEMENTS
+console.log('MAIN JS LOADED');
 const mapBox = document.getElementById('map');
 const loginForm = document.querySelector('.form--login');
 const signupForm = document.querySelector('.form--signup');
